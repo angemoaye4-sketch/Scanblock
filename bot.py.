@@ -1,0 +1,30 @@
+import requests
+import time
+import telebot
+
+# Tes infos réelles extraites de tes captures
+TOKEN = "8207003530:AAF18p_vZj200gSC0rCZBs5mrlsij1atUJo"
+CHAT_ID = "1691499910"
+
+bot = telebot.TeleBot(TOKEN)
+
+def scan_empire():
+    # Analyse des opportunités mondiales
+    url = "https://api.dexscreener.com/latest/dex/search?q=USDT"
+    try:
+        data = requests.get(url).json()
+        pairs = data.get('pairs', [])
+        for pair in pairs[:20]:
+            # On traque les pompes de plus de 5% en 5 minutes
+            m5_change = pair.get('priceChange', {}).get('m5', 0)
+            if abs(m5_change) > 5:
+                symbol = pair['baseToken']['symbol']
+                dex = pair['dexId']
+                msg = f"🔥 **ALERTE EMPIRE** 🔥\n\n💎 Jeton: {symbol}\n🏦 DEX: {dex}\n📈 Var 5min: {m5_change}%\n🔗 [Lien]({pair['url']})"
+                bot.send_message(CHAT_ID, msg, parse_mode='Markdown')
+    except Exception as e:
+        print(f"Erreur: {e}")
+
+while True:
+    scan_empire()
+    time.sleep(60)
