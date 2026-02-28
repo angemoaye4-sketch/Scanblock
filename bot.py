@@ -26,7 +26,7 @@ def scan_empire():
             for pair in pairs[:30]:
                 m5_change = pair.get('priceChange', {}).get('m5', 0)
                 # Alerte déclenchée à 3% ou plus
-                if abs(m5_change) >= 3.0:
+                if abs(m5_change) >= 1.15:
                     symbol = pair['baseToken']['symbol']
                     msg = f"🚀 **ALERTE EMPIRE (3%+)**\n\n💎 Jeton: {symbol}\n📈 Var: {m5_change}%\n🔗 [Lien]({pair['url']})"
                     bot.send_message(CHAT_ID, msg, parse_mode='Markdown')
